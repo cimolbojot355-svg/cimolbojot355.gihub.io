@@ -1012,6 +1012,100 @@
         .hero .btn:hover::before {
             left: 100%;
         }
+
+        /* Notification Styles */
+        .notification-container {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 350px;
+        }
+
+        .notification {
+            background: white;
+            border-radius: 10px;
+            padding: 15px 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+            border-left: 5px solid var(--success);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.hide {
+            transform: translateX(120%);
+        }
+
+        .notification-icon {
+            font-size: 24px;
+            color: var(--success);
+            flex-shrink: 0;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+
+        .notification-message {
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        .notification-close {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: var(--gray);
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: var(--transition);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+        }
+
+        .notification-close:hover {
+            background: var(--light-gray);
+            color: var(--dark);
+        }
+
+        .notification-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: var(--success);
+            width: 100%;
+            transform: scaleX(1);
+            transform-origin: left;
+            transition: transform 5s linear;
+        }
+
+        .notification.progressing .notification-progress {
+            transform: scaleX(0);
+        }
     </style>
 </head>
 <body>
@@ -1038,6 +1132,9 @@
             </div>
         </div>
     </header>
+
+    <!-- Notification Container -->
+    <div class="notification-container" id="notificationContainer"></div>
 
     <!-- Hero Section -->
     <section class="hero">
@@ -1324,6 +1421,7 @@
         let cart = [];
         let selectedPaymentMethod = '';
         let currentProductId = null;
+        let notificationCounter = 0;
 
         // Fungsi-fungsi utama
         function renderProducts() {
@@ -1374,43 +1472,60 @@
         }
 
         function showNotification(message) {
-            // Create notification element
+            notificationCounter++;
+            const notificationId = `notification-${notificationCounter}`;
+            
             const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 100px;
-                right: 20px;
-                background: var(--success);
-                color: white;
-                padding: 15px 20px;
-                border-radius: 10px;
-                box-shadow: var(--shadow);
-                z-index: 3000;
-                transform: translateX(120%);
-                transition: transform 0.3s ease;
-                max-width: 300px;
-            `;
+            notification.id = notificationId;
+            notification.className = 'notification';
             notification.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 10px;">
+                <div class="notification-icon">
                     <i class="fas fa-check-circle"></i>
-                    <span>${message}</span>
                 </div>
+                <div class="notification-content">
+                    <div class="notification-title">Berhasil!</div>
+                    <div class="notification-message">${message}</div>
+                </div>
+                <button class="notification-close" onclick="closeNotification('${notificationId}')">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="notification-progress"></div>
             `;
             
-            document.body.appendChild(notification);
+            document.getElementById('notificationContainer').appendChild(notification);
             
             // Animate in
             setTimeout(() => {
-                notification.style.transform = 'translateX(0)';
+                notification.classList.add('show');
+                notification.classList.add('progressing');
             }, 100);
             
-            // Animate out and remove
+            // Auto remove after 5 seconds
+            const autoRemoveTimeout = setTimeout(() => {
+                closeNotification(notificationId);
+            }, 5000);
+            
+            // Store timeout ID for manual close
+            notification.dataset.timeoutId = autoRemoveTimeout;
+        }
+
+        function closeNotification(notificationId) {
+            const notification = document.getElementById(notificationId);
+            if (!notification) return;
+            
+            // Clear the auto-remove timeout
+            clearTimeout(notification.dataset.timeoutId);
+            
+            // Animate out
+            notification.classList.remove('show');
+            notification.classList.add('hide');
+            
+            // Remove from DOM after animation
             setTimeout(() => {
-                notification.style.transform = 'translateX(120%)';
-                setTimeout(() => {
-                    document.body.removeChild(notification);
-                }, 300);
-            }, 3000);
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
         }
 
         function updateCartDisplay() {
@@ -1455,8 +1570,10 @@
         }
 
         function removeFromCart(foodId) {
+            const food = foods.find(f => f.id === foodId);
             cart = cart.filter(item => item.id !== foodId);
             updateCartDisplay();
+            showNotification(`${food.name} dihapus dari keranjang!`);
         }
 
         function toggleCart() {
@@ -1506,7 +1623,7 @@
 
         function sendOrderViaWhatsApp() {
             if (cart.length === 0) {
-                alert('Keranjang masih kosong!');
+                showNotification('Keranjang masih kosong!');
                 return;
             }
             
@@ -1561,7 +1678,7 @@
 
         function sendOrderWithPayment() {
             if (!selectedPaymentMethod) {
-                alert('Pilih metode pembayaran terlebih dahulu!');
+                showNotification('Pilih metode pembayaran terlebih dahulu!');
                 return;
             }
             
@@ -1575,6 +1692,7 @@
             // Reset keranjang setelah pesan dikirim
             cart = [];
             updateCartDisplay();
+            showNotification('Pesanan berhasil dikirim via WhatsApp!');
         }
 
         function generateOrderMessage() {
@@ -1640,7 +1758,7 @@
                     break;
                 case 'instagram':
                     // Instagram tidak mendukung sharing langsung, jadi kita arahkan ke app
-                    alert('Untuk membagikan ke Instagram, salin informasi produk dan bagikan secara manual.');
+                    showNotification('Untuk membagikan ke Instagram, salin informasi produk dan bagikan secara manual.');
                     copyProductInfo();
                     closeShareModal();
                     return;
@@ -1649,6 +1767,7 @@
             if (shareUrl) {
                 window.open(shareUrl, '_blank');
                 closeShareModal();
+                showNotification('Produk berhasil dibagikan!');
             }
         }
 
@@ -1663,7 +1782,7 @@
                 closeShareModal();
             }).catch(err => {
                 console.error('Gagal menyalin: ', err);
-                alert('Gagal menyalin informasi produk.');
+                showNotification('Gagal menyalin informasi produk.');
             });
         }
 
@@ -1677,7 +1796,7 @@
                 showNotification('Informasi produk berhasil disalin! Silakan bagikan di Instagram.');
             }).catch(err => {
                 console.error('Gagal menyalin: ', err);
-                alert('Gagal menyalin informasi produk.');
+                showNotification('Gagal menyalin informasi produk.');
             });
         }
 
