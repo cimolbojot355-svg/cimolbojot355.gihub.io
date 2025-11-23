@@ -10,8 +10,12 @@
         :root {
             --primary: #e74c3c;
             --primary-dark: #c0392b;
+            --primary-light: #ff7f7f;
             --secondary: #f39c12;
-            --accent: #e67e22;
+            --secondary-dark: #e67e22;
+            --accent: #ff5722;
+            --spicy: #ff4500;
+            --savory: #f39c12;
             --light: #fff5f5;
             --dark: #2c3e50;
             --gray: #7f8c8d;
@@ -19,6 +23,9 @@
             --success: #27ae60;
             --shadow: 0 5px 15px rgba(0,0,0,0.1);
             --transition: all 0.3s ease;
+            --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            --gradient-secondary: linear-gradient(135deg, var(--secondary) 0%, var(--savory) 100%);
+            --gradient-spicy: linear-gradient(135deg, var(--spicy) 0%, var(--primary) 100%);
         }
 
         /* Reset dan Base Styles */
@@ -126,21 +133,21 @@
         }
 
         .btn-primary {
-            background: var(--primary);
+            background: var(--gradient-primary);
             color: white;
         }
 
         .btn-primary:hover {
-            background: var(--primary-dark);
+            background: var(--gradient-spicy);
         }
 
         .btn-secondary {
-            background: var(--secondary);
+            background: var(--gradient-secondary);
             color: white;
         }
 
         .btn-secondary:hover {
-            background: var(--accent);
+            background: linear-gradient(135deg, var(--savory) 0%, var(--secondary-dark) 100%);
         }
 
         .btn-whatsapp {
@@ -163,7 +170,7 @@
 
         .cart-btn {
             position: relative;
-            background: var(--primary);
+            background: var(--gradient-primary);
             color: white;
             border: none;
             padding: 12px 25px;
@@ -178,7 +185,7 @@
         }
 
         .cart-btn:hover {
-            background: var(--primary-dark);
+            background: var(--gradient-spicy);
             transform: translateY(-3px);
             box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
@@ -206,6 +213,20 @@
             text-align: center;
             margin-bottom: 40px;
             border-radius: 0 0 30px 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-spicy);
+            opacity: 0.7;
+            z-index: -1;
         }
 
         .hero h1 {
@@ -233,6 +254,7 @@
             color: var(--primary);
             display: inline-block;
             margin-bottom: 15px;
+            position: relative;
         }
 
         .section-title h2:after {
@@ -240,7 +262,7 @@
             display: block;
             width: 80px;
             height: 4px;
-            background: var(--secondary);
+            background: var(--gradient-secondary);
             margin: 10px auto;
             border-radius: 2px;
         }
@@ -288,7 +310,7 @@
             position: absolute;
             top: 15px;
             right: 15px;
-            background: var(--primary);
+            background: var(--gradient-spicy);
             color: white;
             padding: 5px 10px;
             border-radius: 20px;
@@ -321,12 +343,14 @@
         }
 
         .flame {
-            color: var(--primary);
+            color: var(--spicy);
             font-size: 18px;
+            text-shadow: 0 0 5px rgba(255, 69, 0, 0.5);
         }
 
         .flame.inactive {
             color: var(--light-gray);
+            text-shadow: none;
         }
 
         .rating {
@@ -364,6 +388,18 @@
             margin: 60px 0;
             box-shadow: var(--shadow);
             border-top: 5px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-spicy);
         }
 
         .about-header {
@@ -384,7 +420,7 @@
             display: block;
             width: 100px;
             height: 4px;
-            background: var(--secondary);
+            background: var(--gradient-secondary);
             margin: 10px auto;
             border-radius: 2px;
         }
@@ -409,6 +445,18 @@
             border-left: 5px solid var(--primary);
             transition: var(--transition);
             height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--gradient-spicy);
         }
 
         .info-card:hover {
@@ -509,6 +557,7 @@
             position: relative;
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
             animation: modalFadeIn 0.3s ease;
+            border-top: 5px solid var(--primary);
         }
 
         @keyframes modalFadeIn {
@@ -692,6 +741,7 @@
             padding: 30px;
             position: relative;
             animation: modalFadeIn 0.3s ease;
+            border-top: 5px solid #25D366;
         }
 
         .whatsapp-options {
@@ -750,6 +800,7 @@
             padding: 30px;
             position: relative;
             animation: modalFadeIn 0.3s ease;
+            border-top: 5px solid var(--primary);
         }
 
         .share-options {
@@ -787,6 +838,17 @@
             color: white;
             padding: 40px 0 20px;
             margin-top: 60px;
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-spicy);
         }
 
         .footer-content {
@@ -889,6 +951,67 @@
                 font-size: 2em;
             }
         }
+
+        /* Additional Styling for Spicy Theme */
+        .spicy-text {
+            background: var(--gradient-spicy);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+
+        .savory-text {
+            background: var(--gradient-secondary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+
+        .flame-animation {
+            display: inline-block;
+            animation: flame 1.5s infinite alternate;
+        }
+
+        @keyframes flame {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+
+        .product-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-spicy);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .product-card:hover::after {
+            opacity: 1;
+        }
+
+        .hero .btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: 0.5s;
+        }
+
+        .hero .btn:hover::before {
+            left: 100%;
+        }
     </style>
 </head>
 <body>
@@ -919,10 +1042,10 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <h1>Rasakan Pedas yang Bikin Nagih!</h1>
-            <p>Bojot Seuhah menghadirkan cita rasa pedas autentik dengan bahan-bahan pilihan terbaik. Setiap gigitan bikin ketagihan!</p>
+            <h1>Rasakan <span class="spicy-text">Pedas</span> yang Bikin Nagih!</h1>
+            <p>Bojot Seuhah menghadirkan cita rasa <span class="savory-text">gurih</span> dan <span class="spicy-text">pedas</span> autentik dengan bahan-bahan pilihan terbaik. Setiap gigitan bikin ketagihan!</p>
             <button class="btn btn-primary" onclick="document.getElementById('productsGrid').scrollIntoView({behavior: 'smooth'})">
-                <i class="fas fa-fire"></i> Lihat Menu
+                <i class="fas fa-fire flame-animation"></i> Lihat Menu
             </button>
         </div>
     </section>
@@ -932,7 +1055,7 @@
         <section>
             <div class="section-title">
                 <h2>Menu Andalan Kami</h2>
-                <p>Pilih dari berbagai menu pedas dan gurih yang siap memanjakan lidah Anda</p>
+                <p>Pilih dari berbagai menu <span class="spicy-text">pedas</span> dan <span class="savory-text">gurih</span> yang siap memanjakan lidah Anda</p>
             </div>
             <div class="products-grid" id="productsGrid"></div>
         </section>
@@ -1025,7 +1148,7 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>Bojot Seuhah</h3>
-                    <p>Menghadirkan cita rasa pedas autentik yang bikin nagih. Setiap hidangan dibuat dengan bahan pilihan.</p>
+                    <p>Menghadirkan cita rasa <span class="spicy-text">pedas</span> autentik yang bikin nagih. Setiap hidangan dibuat dengan bahan pilihan.</p>
                     <p><i class="fas fa-map-marker-alt"></i> Jl. Laladon, Bogor, Jawa Barat</p>
                 </div>
                 <div class="footer-section">
@@ -1565,4 +1688,3 @@
     </script>
 </body>
 </html>
-
